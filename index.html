@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>Scribblevasion</title>
+    <!--
+      Иконка вкладки. Без неё браузер сам просит /favicon.ico и получает 404 —
+      лишний отказ в логе площадки. Рисунок тот же, что в каталоге, только
+      уменьшенный. Пути относительные: игра открывается из подпапки.
+    -->
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="64x64" href="favicon-64.png" />
+    <!--
+      Рукописный шрифт автора. Пути относительные: игра на Яндексе открывается
+      из подпапки, абсолютный /assets/... уходит в корень домена и отдаёт 404.
+      @font-face держим здесь, а не в style.css: Vite кладёт css в dist/assets/,
+      и относительный url() из него указал бы на assets/assets/. Никаких CDN.
+    -->
+    <link rel="preload" href="assets/fonts/Scribble.woff" as="font" type="font/woff" crossorigin />
+    <style>@font-face{font-family:Scribble;src:url(assets/fonts/Scribble.woff)format("woff"),url(assets/fonts/Scribble.ttf)format("truetype");font-weight:400;font-style:normal;font-display:block}html,body{background:#fbfbf7;height:100%;margin:0}#boot-splash{z-index:10;pointer-events:none;background-color:#fbfbf7;background-image:linear-gradient(to right, #bfd4ea var(--line), transparent var(--line)), linear-gradient(to bottom, #bfd4ea var(--line), transparent var(--line));background-size:var(--cell) var(--cell);justify-content:center;align-items:center;display:flex;position:fixed;inset:0}#boot-splash:before{content:"";top:0;bottom:0;left:var(--margin);width:var(--mline);background:#c8402f80;position:absolute}#boot-splash span{font-family:Scribble,Trebuchet MS,sans-serif;font-size:var(--fs);color:#000;line-height:1}</style>
+    <script type="module" crossorigin src="./assets/index-D8tEZ-NJ.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-xphgaOEb.css">
+  </head>
+  <body>
+    <div id="boot-splash"><span></span></div>
+    <script>
+      // Масштаб как у Phaser EXPAND: база 540×960 вписывается в окно.
+      //
+      // Язык — та же догадка, что в ui/Splash.ts, и объяснение там же:
+      // ?lang → язык браузера → язык сборки. Площадку здесь спрашивать
+      // бессмысленно: её SDK поднимается уже из кода игры. Значения сборки
+      // подставляет Vite вместо %VITE_LANG% и telegram; если их в
+      // окружении нет, плейсхолдер остаётся как есть — это и проверяем.
+      (function () {
+        var el = document.getElementById('boot-splash');
+        var z = Math.min(innerWidth / 540, innerHeight / 960);
+        var gw = innerWidth / z;
+        var s = el.style;
+        s.setProperty('--cell', 32 * z + 'px');
+        s.setProperty('--line', z + 'px');
+        s.setProperty('--margin', Math.round(Math.min(64, gw * 0.1)) * z - z + 'px');
+        s.setProperty('--mline', 2 * z + 'px');
+        s.setProperty('--fs', Math.round(40 * 1.15) * z + 'px');
+        var build = '%VITE_LANG%';
+        if (build.charAt(0) === '%') build = '';
+        var platform = 'telegram';
+        if (platform.charAt(0) === '%') platform = 'yandex';
+        var forced = new URLSearchParams(location.search).get('lang');
+        var lang = forced || (platform === 'none' ? build || navigator.language : navigator.language || build);
+        var en = String(lang).slice(0, 2).toLowerCase() === 'en';
+        el.firstChild.textContent = en ? 'LOADING\u2026' : '\u0417\u0410\u0413\u0420\u0423\u0417\u041a\u0410\u2026';
+      })();
+    </script>
+    <div id="app"></div>
+  </body>
+</html>

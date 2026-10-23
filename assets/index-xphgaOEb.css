@@ -1,0 +1,1 @@
+*{box-sizing:border-box;margin:0;padding:0}html,body{overscroll-behavior:none;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;background:#fbfbf7;width:100%;height:100%;overflow:hidden}#app{justify-content:center;align-items:center;width:100%;height:100%;display:flex}canvas{touch-action:none;display:block}
